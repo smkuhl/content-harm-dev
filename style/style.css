@@ -1,0 +1,179 @@
+.highlight {
+    border-radius: 0.25rem;
+    color: white;
+    padding: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .bold {
+    padding-left: 0.5rem;
+    font-weight: 700;
+  }
+  
+  .lightgrey {
+    background-color: lightgrey;
+  }
+  
+  .lavender{
+      background-color: lavender;
+  }
+  
+  .lemonchiffon{
+      background-color: LemonChiffon;
+  }
+  
+  .lightyellow{
+  background-color: lightyellow;
+  }
+  
+  .papayawhip{
+      background-color: PapayaWhip;
+  }
+  
+  .gainsboro{
+      background-color: gainsboro;
+  }
+  
+  .lightblue{
+      background-color: lightblue;
+  }
+  
+  .seagreen{
+      background-color: seagreen;
+  }
+  
+  .teal{
+      background-color: teal;
+  }
+  
+  .darkslateblue{
+      background-color:DarkSlateBlue;
+  }
+  
+  .slateblue{
+      background-color: slateblue;
+  }
+  
+  .darkcyan{
+      background-color: darkcyan;
+  }
+  
+  .lightcyan{
+      background-color: lightcyan;
+  }
+  
+  .paleturquoise{
+      background-color: PaleTurquoise;
+  }
+  
+  .cadetblue{
+      background-color: CadetBlue;
+  }
+  
+  .my_red{
+      background-color: #E57A77;
+  }
+  
+  .choice_not_some{
+      background-color: #FFAC1C;
+  }
+  
+  .choice_neutral{
+      background-color: Silver;
+  }
+  
+  .choice_some{
+      background-color: #90EE90;
+  }
+  
+  .choice_very{
+      background-color: #00A36C;
+  }
+
+  body{
+    font-family:Raleway;
+    /* margin:0;
+    padding:0;
+    height:100vh; */
+    background-image:url("http://unsplash.it/800x400");
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-position:center;
+    &:before{
+      content:"";
+      position:absolute;
+      background-color:rgba(0,0,0,.7);
+      width:100%;
+      height:100%;
+    }
+  }
+  .card{
+    left:50%;
+    top:50%;
+    position:absolute;
+    transform:translate(-50%,-50%);
+  }
+  .twitter-card{
+    position:relative;
+    display:inline-block;
+  }
+  .details{
+    a{
+      text-decoration:none;
+    }
+    padding:60px 0 20px 0;
+      span{
+        &#name{
+          font-size:24px;
+        }
+        &#nick{
+          font-size:14px;
+        }
+      color:#000;
+      display:block;
+    }
+    border-top:4px solid #FFF;
+    text-align:center;
+    background-color:#FFF;
+    ul{
+      margin:0;
+      padding:10px 0 0 0;
+      display:block;
+    }
+    li{
+      width:32%;
+      list-style-type:none;
+      display:inline-block;
+      a{
+        font-size:14px;
+        color:#AAA;
+        text-decoration:none;
+       }
+        span{
+        color:#000;
+        font-size:28px;
+        display:block;
+      }
+    }
+  }
+  .pp{
+      position:absolute;
+      top:30%;
+      left:50%;
+      transform:translate(-50%,0%);
+    img{
+      max-width:100px;
+      border-radius:50%;
+      border:4px solid #FFF;
+    }
+  }
+  .bg{
+    background-image:url("http://unsplash.it/800x500");
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-position:center;
+    width:350px;
+    height:150px;
+  }
+
+
+  
