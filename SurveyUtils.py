@@ -11,7 +11,7 @@ import urllib.parse
 from urllib.parse import urlencode
 
 conn = st.connection('gcs', type=FilesConnection)
-all_tweets = conn.read("tweet_annotation/all-tweet-0425.csv", input_format="csv")
+all_tweets = conn.read("misinfo-harm/round3_tweets.csv", input_format="csv")
 
 def disable():
     st.session_state.disabled = True
@@ -64,23 +64,26 @@ def find_the_remaining():
 
 
 def embed_tweet_page(tweet_url):
-
-    tweet = all_tweets[all_tweets["tweet_url"] == tweet_url]
+    tweet_id = tweet_url.split("/")[-1]
+    tweet = all_tweets[all_tweets["tweet_real_id"] == int(tweet_id)]
     _name = urllib.parse.quote(tweet["user_name"].tolist()[0])
     _handle = tweet["user_username"].tolist()[0]
     _follower = tweet["user_followers_count"].tolist()[0]
     _following = int(tweet["user_following_count"].tolist()[0])
     _date = urllib.parse.quote(tweet["created_at"].tolist()[0])
-    _profileImage = tweet["profile_img_file"].tolist()[0]
-    _profileImageUrl = urllib.parse.quote(gm.generate_signed_url(file_path=f"profile_images_new/{_profileImage}"), safe=':/')
-    _verified = tweet["user_verfied"].tolist()[0]
+    _profileImage = tweet["profile_image_file"].tolist()[0]
+    _profileImageUrl = urllib.parse.quote(gm.generate_signed_url(file_path=f"{_profileImage}"), safe=':/')
+    _verified = tweet["user_verified"].tolist()[0]
     _headline = urllib.parse.quote(tweet["user_description"].tolist()[0])
-    _commentcount = tweet["reply_count"].tolist()[0]
+    # _commentcount = tweet["reply_count"].tolist()[0]
+    _commentcount = 0
     _retweetcount = tweet["retweet_count"].tolist()[0]
     _favcount = tweet["like_count"].tolist()[0]
     _text = urllib.parse.quote(tweet["text"].tolist()[0])
-    _viewcount = tweet["impression_count"].tolist()[0]
-    _bookmark = tweet["bookmark_count"].tolist()[0]
+    # _viewcount = tweet["impression_count"].tolist()[0]
+    _viewcount = 0
+    # _bookmark = tweet["bookmark_count"].tolist()[0]
+    _bookmark = 0
     _imgurls = tweet["media_details"].tolist()[0]
     if str(_imgurls) != "nan" and _imgurls != "":
         try:
@@ -97,3 +100,9 @@ def embed_tweet_page(tweet_url):
         _imgurls = ""
     formatted = f"https://linqiu0-0.github.io/fake-tweet-card/?name={_name}&date={_date}&handle={_handle}&profileImageUrl={_profileImageUrl}&follower={_follower}&following={_following}&verified={_verified}&headline={_headline}&commentCount={_commentcount}&retweetCount={_retweetcount}&favoriteCount={_favcount}&text={_text}&viewCount={_viewcount}&bookmark={_bookmark}&imageUrls={_imgurls}"
     components.iframe(formatted, height=1500)
+
+
+
+def get_survey_questions():
+    return ["Does the message content include an explicit call to action? The message addresses the reader using pronouns such as 'you, we, us' or implies the reader's involvement. It might ask the reader to post, share, tell others about something, join an event, stay tuned, or some other follow up action."
+            ,"second"]

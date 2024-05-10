@@ -8,13 +8,11 @@ from st_files_connection import FilesConnection
 
 
 # This library handles the distribution & management of survey data.
-group_size = 10
-num_tweet = 20
-tweet_dataset_filepath = "tweet_annotation/all-tweet-0425.csv"
-tweet_url_filepath = "tweet_annotation/all-tweet-url-0425.txt" # for easy exception handling
+group_size = 9
+num_tweet = 9
+tweet_dataset_filepath = "misinfo-harm/round3_tweets.csv"
 
 def get_tweet_set_random():
-
     conn = st.connection('gcs', type=FilesConnection)
     df = conn.read(tweet_dataset_filepath,input_format="csv")
 
@@ -35,35 +33,13 @@ def get_tweet_set_random():
     for i in group_id:
         filtered = df[(df['Group'] == i)]['tweet_url'].tolist()
         tweet_set += filtered
+
         
     start_id = (group_id[0]-1)*group_size + 1
     st.session_state["current_page"] = 0
     st.session_state["tweet_set"] = tweet_set
     st.session_state["StartID"] = start_id
     st.session_state["completed_tweet"] = []
-
-
-def embed_tweet(tweets,tweet):
-    try:
-        # Attempt to embed the tweet
-        su.embedTweet(tweet)
-        return tweet
-    except Exception:
-        # If an exception is encountered, select a new emergency_tweet
-        new_emergency_tweet = random.choice(tweets)
-        return embed_tweet(tweets,new_emergency_tweet)
-        
-def get_a_tweet():
-
-    conn = st.connection('gcs', type=FilesConnection)
-    tweet_urls = conn.read(tweet_url_filepath)
-
-    list1 = list(tweet_urls.split("\n"))
-    list2 = list1[st.session_state.StartID:st.session_state.StartID + st.session_state.annotation_number]
-    tweets = [x for x in list1 if x not in list2]
-    tweet = random.choice(tweets)
-    tweet = embed_tweet(tweets,tweet)
-    return tweet
 
 
 def cluster_demographics():

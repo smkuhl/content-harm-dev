@@ -10,7 +10,7 @@ def upload_csv(local_file_name, destination_blob_name):
     gcp_credentials = json.loads(st.secrets["gcp_service_account"]["key"], strict=False)
     credentials = service_account.Credentials.from_service_account_info(gcp_credentials)
 
-    bucket_name = "tweet_annotation"
+    bucket_name = "misinfo-harm"
     storage_client = storage.Client(credentials=credentials)
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(destination_blob_name)
@@ -22,7 +22,7 @@ def generate_signed_url(file_path):
     gcp_credentials = json.loads(st.secrets["gcp_service_account"]["key"], strict=False)
     credentials = service_account.Credentials.from_service_account_info(gcp_credentials)
 
-    bucket_name = "tweet_annotation"
+    bucket_name = "misinfo-harm"
     storage_client = storage.Client(credentials=credentials)
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.get_blob(file_path)

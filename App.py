@@ -1,4 +1,6 @@
 import streamlit as st
+st.set_page_config(layout="wide")
+
 import pandas as pd
 import numpy as np
 import altair as alt
@@ -16,16 +18,14 @@ import SurveyForm as survey_form
 import Demographics as demographics
 import LoginVerification as login_verification
 
-
-st.set_page_config(page_title="Tweet Annotation", layout="wide")
 num_tweet = 20  # i.e st.session_state.annotation_number, easier for referencing
-css_path = os.path.abspath("style/style.css")
-su.local_css(css_path)
+# css_path = os.path.abspath("style/style.css")
+# su.local_css(css_path)
 survey_state.state_initializer()
-# state_initializer()
 
-######## intro page
+####### intro page
 if "counter" not in st.session_state or st.session_state.counter < 100:
+    # st.set_page_config(page_title="Tweet Annotation", layout="wide")
     st.session_state.counter = 0
     st.image('https://social.cs.washington.edu/img/logo_long.png', width=200)  # Adjust the width as needed
 

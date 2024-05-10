@@ -1,6 +1,7 @@
 import streamlit as st
-import random
-num_tweet = 20
+
+#TODO: update the num tweet
+num_tweet = 9
 import pandas as pd
 
 def state_initializer():

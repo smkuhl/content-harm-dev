@@ -15,12 +15,12 @@ import gcsManage as gm
 
 def print_sidebar():
     with st.sidebar:
-        st.session_state.current_page = su.paginator(
-            "Select a Tweet",
-            st.session_state.tweet_set,
-            st.session_state.current_page,
-            st.session_state.completed_tweet,
-        )
+        # st.session_state.current_page = su.paginator(
+        #     "Select a Tweet",
+        #     st.session_state.tweet_set,
+        #     st.session_state.current_page,
+        #     st.session_state.completed_tweet,
+        # )
 
         st.progress(
             int(
@@ -40,32 +40,19 @@ def print_sidebar():
         col1, col2 = st.columns(2)
 
 
-        if (st.session_state.current_page+1)%2 == 0:
-            twitter_title = f"<div><span class='highlight darkslateblue'>Tweet {st.session_state.current_page+1}</span><br/>"
-        else:
-            twitter_title = f"<div><span class='highlight my_red'>Tweet {st.session_state.current_page+1}</span><br/>"
+        # if (st.session_state.current_page+1)%2 == 0:
+        #     twitter_title = f"<div><span class='highlight darkslateblue'>Tweet {st.session_state.current_page+1}</span><br/>"
+        # else:
+        #     twitter_title = f"<div><span class='highlight my_red'>Tweet {st.session_state.current_page+1}</span><br/>"
   
-        # st.subheader(f"Tweet {st.session_state.current_page+1}")
-        st.markdown(twitter_title, unsafe_allow_html=True)
+        # # st.subheader(f"Tweet {st.session_state.current_page+1}")
+        # st.markdown(twitter_title, unsafe_allow_html=True)
         try:
             su.embed_tweet_page(st.session_state.tweet_set[st.session_state.current_page])
-        except:
-            emergency_tweet = survey_data.get_a_tweet()
-            su.embed_tweet_page(st.session_state.tweet_set[st.session_state.current_page])
-
-            st.session_state.emergency_round += 1
-            st.session_state.tweet_set[st.session_state.current_page] = emergency_tweet # update current tweet_set
-
-            conn = st.connection('gcs', type=FilesConnection)
-            user_progress_df_path = f"User{st.session_state.UserIdentifier}_progress.csv"
-            df = conn.read("tweet_annotation/User_Progress/"+ user_progress_df_path, input_format="csv", ttl= 20)
-            df['tweet_set'] = str(st.session_state.tweet_set) # TODO
-            df['emergency_round'] = str({st.session_state.emergency_round:st.session_state.current_page}) # TODO
-            df.to_csv("local_new_user_progress.csv")
-            abs_path = os.path.abspath("local_new_user_progress.csv")
-            gm.upload_csv(abs_path , "User_Progress/"+user_progress_df_path)
-
-
+        except Exception as e:
+            # Display the exception message to the user
+            st.warning(f"An error occurred: {str(e)} Debug this! it shouldn't happen")
+        
 def print_form():
     with st.form("my_form"):
         if (st.session_state.current_page+1)%2 == 0:
@@ -73,78 +60,34 @@ def print_form():
         else:
             twitter_account = f"<div> You are viewing <span class='highlight my_red'>Tweet {st.session_state.current_page+1}</span><br/>"
         st.markdown(twitter_account, unsafe_allow_html=True)
+        
+        questions = su.get_survey_questions()
+        responses = [None] * len(questions)
 
-        col1, col2 = st.columns([0.6, 0.4])
-        with col1:
-            
-            Q1 = st.selectbox(
-                "Q1. How **believable** does the Tweet appear to you?",
-                [
-                    "",
-                    "Not believable at all",
-                    "Somewhat not believable",
-                    "Neutral",
-                    "Somewhat believable",
-                    "Very believable",
-                    "Not applicable (Please briefly explain the reason in Q4)",
-                ],
-                placeholder="",
-                key="Q1",
-            )
+        for i, question in enumerate(questions):
+            response=st.radio(label=question, options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
+            responses[i]=response
 
-            st.write("\n")
-            st.write("\n")
+        def submit_verify(responses):
 
-            Q2 = st.selectbox(
-                "Q2. How likely do you think **your friends** or **peers** will find the above Tweet believable?",
-                [
-                    "",
-                    "Not believable at all",
-                    "Somewhat not believable",
-                    "Neutral",
-                    "Somewhat believable",
-                    "Very believable",
-                    "Not applicable (Please briefly explain the reason in Q4)",
-                ],
-                placeholder="",
-                key="Q2",
-            )
-
-            st.write("\n")
-            st.write("\n")
-
-            Q3 = st.selectbox(
-                "Q3. If this Tweet were widely spread, its message would likely be believed by:",
-                ["", "Many", "Few", "Not applicable (Please briefly explain the reason in Q4)"],
-                key="Q3",
-                placeholder="",
-            )
-
-            st.write("\n")
-            st.write("\n")
-
-        Q4 = st.text_area("Q4. Additional comments (*Required if you opt \"Not Applicable\" in any one of Q1-Q3)", key="Q4")
-
-        def submit_verify():
             # Store current data to the database
             # 1. Create a new df for this annotation
             # 2. Check if a record for this UserIdentifier and TweetURL already exists
             # 3. If yes, overwrite; Else, append to the end
             
             # 1. Create a new df for this annotation
-            new_data = [
-                {
+            new_data = {
                     "username": st.session_state.UserIdentifier,
                     "tweetURL": st.session_state.tweet_set[
                         st.session_state.current_page
                     ],
-                    "Q1": st.session_state.Q1,
-                    "Q2": st.session_state.Q2,
-                    "Q3": st.session_state.Q3,
-                    "Q4": st.session_state.Q4,
-                }
-            ]
-            new_record = pd.DataFrame(new_data)
+            }
+            
+
+            for i, response in enumerate(responses):
+                new_data[f"Q{i+1}"] = response
+             
+            new_record = pd.DataFrame([new_data])
 
             # 2. Check if a record for this UserIdentifier and TweetURL already exists
             existing_record_mask = (
@@ -161,12 +104,10 @@ def print_form():
                 if st.session_state.current_page in st.session_state.completed_tweet:
                     st.session_state.completed_tweet.remove(st.session_state.current_page)
                     st.session_state.user_annotation_df.loc[
-                        existing_record_mask, ["Q1", "Q2", "Q3", "Q4"]
+                        #TODO: update this question mask
+                        existing_record_mask, ["Q1", "Q2"]
                     ] = (
-                        st.session_state.Q1,
-                        st.session_state.Q2,
-                        st.session_state.Q3,
-                        st.session_state.Q4,
+                        responses
                     )
                     st.success(
                         "Your response has been updated! ",
@@ -196,89 +137,55 @@ def print_form():
             # Update User unique progress
             conn = st.connection('gcs', type=FilesConnection)
             user_progress_df_path = f"User{st.session_state.UserIdentifier}_progress.csv"
-            df_progress = conn.read("tweet_annotation/User_Progress/"+user_progress_df_path, input_format="csv", ttl= 20)
+            df_progress = conn.read("misinfo-harm/User_Progress/"+user_progress_df_path, input_format="csv", ttl= 20)
             df_progress["completed_tweet"] = str(st.session_state.completed_tweet)
             df_progress.to_csv("local_new_user_progress.csv")
             abs_path = os.path.abspath("local_new_user_progress.csv")
             gm.upload_csv(abs_path , "User_Progress/"+user_progress_df_path)
-
-        def submitted_and_next():
-            if (
-                st.session_state.Q1 == ""
-                or st.session_state.Q2 == ""
-                or st.session_state.Q3 == ""
-            ):
-                st.warning("Please answer all questions", icon="⚠️")
-            elif(
-                (st.session_state.Q1 == "Not applicable (Please briefly explain the reason in Q4)"
-                or st.session_state.Q2 == "Not applicable (Please briefly explain the reason in Q4)"
-                or st.session_state.Q3 == "Not applicable (Please briefly explain the reason in Q4)")
-                and st.session_state.Q4 == ""
-            ): 
-                st.warning("Please briefly comment the reason(s) for opting \"Not applicable\" in Q1-Q3.",  icon="⚠️")
-            else:
-                submit_verify()
-                if st.session_state.current_page != st.session_state.annotation_number-1:
-                    st.session_state.current_page += 1
-                else:
-                    st.session_state.current_page = su.find_the_remaining()
-                st.session_state.counter += 1
-                st.session_state.Q1 = ""
-                st.session_state.Q2 = ""
-                st.session_state.Q3 = ""
-                st.session_state.Q4 = ""
-
-        def submitted_final():
-            if (
-                st.session_state.Q1 == ""
-                or st.session_state.Q2 == ""
-                or st.session_state.Q3 == ""
-            ):
-                st.warning("Please answer all questions", icon="⚠️")
-            else:
-                submit_verify()
-                st.session_state.counter += 1
+            
+                        
             
         if(len(st.session_state.completed_tweet) == st.session_state.annotation_number-1): 
             submitted = st.form_submit_button(
-                "Finish & Continue", on_click=submitted_final, type="primary" # submit the final one
+                "Finish & Continue", type="primary" # submit the final one
             )
+
+            if submitted:
+                if None in responses:
+                    st.warning("Please answer all questions", icon="⚠️")
+                else:
+                    submit_verify(responses)
+                    st.session_state.counter += 1
+                    st.rerun()
+           
         else:
             submitted = st.form_submit_button(
-                "Save & Continue", on_click=submitted_and_next, type="primary" # submit an annotation
+                "Save & Continue", type="primary" # submit an annotation
             )
+
+            if submitted:
+                if None in responses:
+                    st.warning("Please answer all questions", icon="⚠️")
+                else:
+                    submit_verify(responses)
+                    if st.session_state.current_page != st.session_state.annotation_number-1:
+                        st.session_state.current_page += 1
+                    else:
+                        st.session_state.current_page = su.find_the_remaining()
+                    st.session_state.counter += 1
+                    st.rerun()
             
 
     st.write("\n")
 
-    def proceed_next():
-        # Update progress data
-        st.session_state.completed_tweet.append(st.session_state.current_page)
-        finished_count = len(st.session_state.completed_tweet) + 1
+    # def proceed_previous():
+    #     if st.session_state.current_page > 0:
+    #         st.session_state.current_page -= 1
+    #     st.session_state.response=[]
 
-        conn = st.connection('gcs', type=FilesConnection)
-        user_progress_df_path = f"User{st.session_state.UserIdentifier}_progress.csv"
-        df_progress = conn.read("tweet_annotation/User_Progress/"+user_progress_df_path, input_format="csv", ttl= 20)
-        df_progress.loc[["start_id", "finished_count"]] = (st.session_state.StartID, finished_count)
-        df_progress.to_csv("local_new_user_progress.csv")
-        abs_path = os.path.abspath("local_new_user_progress.csv")
-        gm.upload_csv(abs_path , "User_Progress/"+user_progress_df_path)
-
-        st.session_state.counter += 1
-
-
-
-    def proceed_previous():
-        if st.session_state.current_page > 0:
-            st.session_state.current_page -= 1
-        st.session_state.Q1 = ""
-        st.session_state.Q2 = ""
-        st.session_state.Q3 = ""
-        st.session_state.Q4 = ""
-
-    col1, col2 = st.columns(2)
-    if st.session_state.current_page != 0:
-        prev_tweet = col1.button("Previous", on_click=proceed_previous)
+    # col1, col2 = st.columns(2)
+    # if st.session_state.current_page != 0:
+    #     prev_tweet = col1.button("Previous", on_click=proceed_previous)
            
 def print_helper():
     st.caption("Labeling")

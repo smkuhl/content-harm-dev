@@ -84,7 +84,7 @@ def print_ending():
 
     st.write(
         """
-        Should you have any inquiries, please contact us at bguoac@uw.edu.
+        Should you have any inquiries, please contact us at smkuhl@cs.washington.edu or lq9@cs.washington.edu.
         We would like to thank you again for the participation! :)
         """
     )

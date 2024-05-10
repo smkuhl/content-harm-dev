@@ -36,7 +36,7 @@ def login_ver():
             st.session_state.UserIdentifier = identifier
 
             conn = st.connection('gcs', type=FilesConnection)
-            existing_user_info = conn.read("tweet_annotation/users_all.csv", input_format="csv", ttl= 20)
+            existing_user_info = conn.read("misinfo-harm/users_all.csv", input_format="csv", ttl= 20)
 
             if st.session_state.UserIdentifier in set(existing_user_info["username"]):
                 # proceed to annotation
@@ -51,7 +51,7 @@ def login_ver():
 
                 conn = st.connection('gcs', type=FilesConnection)
                 user_progress_df_path = f"User{st.session_state.UserIdentifier}_progress.csv"
-                user_progress_df = conn.read("tweet_annotation/User_Progress/"+user_progress_df_path, input_format = "csv", ttl= 20)
+                user_progress_df = conn.read("misinfo-harm/User_Progress/"+user_progress_df_path, input_format = "csv", ttl= 20)
                 tmp_completed_tweet = user_progress_df["completed_tweet"].iloc[0]
                 if tmp_completed_tweet == "[]":
                     st.session_state.completed_tweet = []
@@ -64,7 +64,7 @@ def login_ver():
                 # Load User Annotation
                 user_df_path = f"User{st.session_state.UserIdentifier}_annotation.csv"
                 conn = st.connection('gcs', type=FilesConnection)
-                st.session_state.user_annotation_df = conn.read("tweet_annotation/User_Annotation/"+ user_df_path, input_format="csv", ttl= 20)
+                st.session_state.user_annotation_df = conn.read("misinfo-harm/User_Annotation/"+ user_df_path, input_format="csv", ttl= 20)
                           
                 st.session_state.page_status = "Instruction"
                 st.session_state.warning_visibility = False

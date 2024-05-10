@@ -11,6 +11,8 @@ import gcsManage as gm
 from st_files_connection import FilesConnection
 import os
 import SurveyForm as survey_form
+import SurveyUtils as su
+
 
 # This Library contains functions for Demographics Verification & Tweet Set Generation
 
@@ -71,7 +73,7 @@ def demographics_verification():
         else:
 
             conn = st.connection('gcs', type=FilesConnection)
-            existing_user_info = conn.read("tweet_annotation/users_all.csv", input_format="csv", ttl= 20)
+            existing_user_info = conn.read("misinfo-harm/users_all.csv", input_format="csv", ttl= 20)
 
             survey_data.get_tweet_set_random() # get a tweet_set based on the demographics information.
             new_user_data = [
@@ -108,16 +110,15 @@ def demographics_verification():
             gm.upload_csv(abs_path, "User_Progress/"+user_progress_df_path)
 
             # User Annotation CSV
+            questions = su.get_survey_questions()
             template_data = [
                 {
                     "username": "sample",
                     "tweetURL": "sample",
-                    "Q1": "sample",
-                    "Q2": "sample",
-                    "Q3": "sample",
-                    "Q4": "sample",
                 }
             ]
+            for i in range(len(questions)):
+                template_data[0][f"Q{i+1}"] = "sample"
             st.session_state.user_annotation_df = pd.DataFrame(template_data)
             user_df_path = f"User{st.session_state.UserIdentifier}_annotation.csv"
             st.session_state.user_annotation_df.to_csv(user_df_path, index = False)

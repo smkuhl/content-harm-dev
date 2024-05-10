@@ -48,7 +48,7 @@ your_gcs_bucket
 - all-tweet.csv.
 - users_all.csv: [user_id, randomized_tweet_group_start_id, age, education, politic_ideology]
 - User{user1}_annotation.csv: [username, tweetURL, Q1, Q2, Q3, Q4]
-- User{user1}_progress.csv: [username, start_id, completed_tweet, tweet_set, emergency_round]
+- User{user1}_progress.csv: [username, start_id, completed_tweet, , emergency_round]
 
 
 2. Clone the repository, upload the codes to your Github.
