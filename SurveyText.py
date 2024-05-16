@@ -10,14 +10,14 @@ def print_intro():
         """
         :technologist: We are a group of researchers from the Social Futures Lab at the University of Washington. 
         
-        We cordially invite you to participate this annotation of tweet believability.
+        We cordially invite you to participate this annotation of content harmfulness.
         
 
 
         
         :warning: **Content Warning**
         
-        Please be aware that subsequent tweets could contain potentially unsettling or sensitive content. You must be above 18 to participate in the annotation. We advise discretion while proceeding.
+        This study may contain tweets with, but not limited to, violence, abusive language, or death, which may be disturbing. TODO: (You may skip questions or submit the survey at any time.) (because technically you can't skip tweets) You must be above 18 to participate in the annotation. We advise discretion while proceeding.
         
 
 
@@ -34,11 +34,11 @@ def print_intro():
 
         :memo: **What Will You Do**
          
-        You will read 20 Tweets. 
+        You will read 10 Tweets. 
 
-        For each Tweet, please evaluate how believable it is to you, to your friends and peers, and to the general public.
+        For each Tweet, you will annotate their potential harms from five different perspectives: actionability, exploitativeness, likelihood of spread, believability, and social fragmentation.
 
-        We value users' opinion about the Tweet, therefore we suggest annotating the Tweet without searching on the Internet.
+        You may the use internet to search any topics, people, organizations, etc. However we encourage you to not spend to much time on questions you do not know the answer to. Please refrain from looking up the tweet directly or using any AI agent such as ChatGPT, Bard, or Bing Chat. 
       
         """
     )
@@ -49,9 +49,9 @@ def print_intro():
     st.write(
         """
         
-        This annotation survey will take around 40 minutes.
+        This annotation survey will take around 30 minutes. After submitting the survey, click on the link provided to be redirected. This will provide proof of completion.
         
-        We would like to express our gratitude for your time and contribution to our research. If you have any questions, please feel free to contact us at bguoac@uw.edu.
+        We would like to express our gratitude for your time and contribution to our research. If you have any questions, please feel free to contact us at smkuhl@cs.washington.edu.
         
         \n
         \n
@@ -84,6 +84,7 @@ def print_ending():
 
     st.write(
         """
+        Please follow this link to confirm your completion for Prolific: [INSERT PROLIFIC LINK HERE]
         Should you have any inquiries, please contact us at smkuhl@cs.washington.edu or lq9@cs.washington.edu.
         We would like to thank you again for the participation! :)
         """

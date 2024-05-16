@@ -66,7 +66,14 @@ def print_form():
 
         for i, question in enumerate(questions):
             response=st.radio(label=question, options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
-            responses[i]=response
+            '''
+            if response == "Not Applicable":
+                explanation = st.text_area(f"Please explain your reasoning for Question {i+1}:", key=f"explanation_{i}")
+                responses[i] = (response, explanation)
+            else:
+                responses[i] = (response, None)
+            '''
+            responses[i] = response
 
         def submit_verify(responses):
 
@@ -105,7 +112,7 @@ def print_form():
                     st.session_state.completed_tweet.remove(st.session_state.current_page)
                     st.session_state.user_annotation_df.loc[
                         #TODO: update this question mask
-                        existing_record_mask, ["Q1", "Q2"]
+                        existing_record_mask, ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10", "Q11", "Q12", "Q13", "Q14", "Q15", "Q16"]
                     ] = (
                         responses
                     )

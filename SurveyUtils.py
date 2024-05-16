@@ -105,4 +105,18 @@ def embed_tweet_page(tweet_url):
 
 def get_survey_questions():
     return ["Does the message content include an explicit call to action? The message addresses the reader using pronouns such as 'you, we, us' or implies the reader's involvement. It might ask the reader to post, share, tell others about something, join an event, stay tuned, or some other follow up action."
-            ,"second"]
+            ,"Does the piece of content explicitly or implicilty incorporate coordination efforts, such as dates/times, locations, or other arrangment for a follow-up? For example, using words such as soon, now, in the coming days.",
+            "Does the message provide a way that people might be directly harmed? For example identifying information about an individual that is not widely or publicly known.",
+            "Does the message directly address or reference children or use language aimed at a younger audience?", 
+            "Does this message directly address or reference the elderly community, a subgroup of the elderly, or discus topics aimed at them? For example, people on government pensions, nursing home residents, etc.", 
+            "Could this message introduce a degree of fear or feelings of uneasiness to the intended audience or general public?", 
+            "Is this message content complicated to understand? For example, does it include technical terminology, specialized knowledge, or complex logic?", 
+            "Do the people or entities who are spreading the piece of content have a broad reach (size of following on social media, “influencer,” presence on TV or other news media)?", 
+            "Are the people or entities known to be repeat spreaders of questionable information? Hint: search the name of the author/poster and find whether they have been debunked before posting the current Tweet.",
+            "Is there a lack of high-quality information that is refuting the message's claim? Do a quick internet search based on the Tweet content and see if there is any debunking information.",
+            "Does the poster and/or organization/outlet have a noteworthy number of social media/community followers?",
+            "Is the content published by an organization/outlet with transparent editorial control? Editorial control refers to the ability to review, standardize, or veto content. If the poster is not an organization or outlet select N/A.",
+            "Does the message fit into a larger narrative that has been existing for some time?",
+            "Does the message question or challenge the functioning of public institutions? Public institutions include schools, law enforcement, public transit, government agencies, etc.",
+            "Does the message question other people in general within a community or society?",
+            "Was this Tweet posted before 2024?"]
