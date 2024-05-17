@@ -13,6 +13,7 @@ import SurveyData as survey_data
 from st_files_connection import FilesConnection
 import gcsManage as gm
 
+
 def print_sidebar():
     with st.sidebar:
         # st.session_state.current_page = su.paginator(
@@ -65,14 +66,8 @@ def print_form():
         responses = [None] * len(questions)
 
         for i, question in enumerate(questions):
+            st.session_state.is_text_form_disabled = True
             response=st.radio(label=question, options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
-            '''
-            if response == "Not Applicable":
-                explanation = st.text_area(f"Please explain your reasoning for Question {i+1}:", key=f"explanation_{i}")
-                responses[i] = (response, explanation)
-            else:
-                responses[i] = (response, None)
-            '''
             responses[i] = response
 
         def submit_verify(responses):
