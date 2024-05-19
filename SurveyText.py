@@ -54,8 +54,6 @@ def print_intro():
         We would like to express our gratitude for your time and contribution to our research. If you have any questions, please feel free to contact us at smkuhl@cs.washington.edu.
         
         \n
-        \n
-        \n
 
         ⬇️ Please enter your unique Prolific ID to begin your annotation task or restore your progress.
         """
@@ -123,39 +121,36 @@ def print_example(id):
 
 
 def print_instruction():
-
-    st.write(" ")
-    st.write(" ")
-
     st.subheader("What is Tweet Annotation for?")
     st.write("""
-             Tweet Annotation is... 
+             This study is a crowdsourced data annotation survey that aims to identify and explain content’s harm based on its believability, actionability, social fragmentation, exploitativeness, and likelihood of spread.
         """)
 
-    st.write(" ")
-    st.write(" ")
+    # st.write(" ")
     
     st.subheader("What You Need to Do?")
+    st.write("""
+                1. Read the tweet on the lefthand side. You are also provided the profile of the Tweet's author if you hover over to profile icon. \n
+                2. Read each question on the right carefully. Answer yes, no, or not applicable. If you answer not applicable you will be asked to explain your reasoning. \n
+                3. Click the next button at the bottom of the survey when you are done with the current Tweet. You will not be able to return to previous Tweets. Make sure to answer all the questions or the form will not let you continue. \n
+                4. When you complete the survey click the link to be redirected back to Prolific. This will confirm your submission. \n
+                """)
     st.write(
-        """ You will read 20 tweets. 
-            For each tweet, you may use all information available to evaluate **how believable it is to you**, **to your friends and peers**, and **to the overall society**.
+        """ 
+            You may the use internet to search any topics, people, organizations, etc. However we encourage you to not spend to much time on questions you do not know the answer to. This survey is designed to take about 20-30 minutes to complete. Please refrain from looking up the tweet directly or using any AI agent such as ChatGPT, Bard, or Bing Chat.
       """
     )
 
-    st.write(" ")
-    st.write(" ")
+    # st.write(" ")
     
     st.write(""" ⚠️ **Content Warning**
-             
-
-        Please be aware that subsequent tweets could contain potentially unsettling or sensitive content. You must be above 18 to participate in the annotation. We advise discretion while proceeding.
+        This study may contain tweets with, but not limited to, violence, abusive language, and death, which may be disturbing. You may skip questions or exit the survey at any time. However, incomplete submissions may be rejected. 
     """)
 
-    st.write(" ")
-    st.write(" ")
+    # st.write(" ")
 
-    st.subheader("Labeling Example")
-    st.write("Tweets may and may not contain images. Below are some examples of labeling Tweets with images:")
+    st.subheader("Video Demo")
+    st.write("View the following video for a demo on how to annotate one Tweet.")
 
 
     st.caption("Note:")
