@@ -56,19 +56,52 @@ def print_sidebar():
         
 def print_form():
     with st.form("my_form"):
+
+        # st.markdown("<a id='top'></a>", unsafe_allow_html=True)
+        
         if (st.session_state.current_page+1)%2 == 0:
             twitter_account = f"<div> You are viewing <span class='highlight darkslateblue'>Tweet {st.session_state.current_page+1}</span><br/>"
         else:
             twitter_account = f"<div> You are viewing <span class='highlight my_red'>Tweet {st.session_state.current_page+1}</span><br/>"
         st.markdown(twitter_account, unsafe_allow_html=True)
-        
+    
         questions = su.get_survey_questions()
         responses = [None] * len(questions)
 
+        start_idx = [0, 3, 7, 9, 12]
+        headers = ["Actionability", "Exploitativeness", "Likelihood of Spread", "Believability", "Social Fragmentation"]
         for i, question in enumerate(questions):
+            # display header if it's the first question in that section
+            if i in start_idx:
+                idx = start_idx.index(i)
+                st.subheader(f"{headers[idx]}")
+
+            # bold first part of the question
+            parts = question.split('?', 1)
+            if len(parts) > 1:
+                bold_part = f"**{parts[0]}?**"
+                rest_part = parts[1].strip()
+                question_formatted = f"{bold_part}\n\n{rest_part}"
+            else:
+                question_formatted = f"**{question}**"
+                
+            # display question
             st.session_state.is_text_form_disabled = True
-            response=st.radio(label=question, options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
+            # st.markdown(question_formatted, unsafe_allow_html=True)
+            response=st.radio(label=question_formatted, options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
             responses[i] = response
+            
+            '''
+            # JavaScript to scroll to the top
+            scroll_to_top_js = """
+            <script>
+                window.onload = function() {
+                    window.scrollTo(0, 0);
+                }
+            </script>
+            """
+            st.markdown(scroll_to_top_js, unsafe_allow_html=True)
+            '''
 
         def submit_verify(responses):
 
@@ -125,6 +158,7 @@ def print_form():
                     "Your response has been saved!",
                     icon="✅",
                 )
+                
 
             st.session_state.completed_tweet.append(st.session_state.current_page)
 

@@ -62,6 +62,7 @@ def print_intro():
     )
 
 def print_annotation_guide():
+    st.write('#')
     st.title("Tweet Annotation")
     st.write
     st.write(
