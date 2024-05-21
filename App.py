@@ -33,12 +33,12 @@ if "counter" not in st.session_state or st.session_state.counter < 100:
     login_verification.login_ver()  # login verification
 
 ######### demographics page
-elif (
-    st.session_state.counter >= 100
-    and st.session_state.counter <= 200
-    and st.session_state.page_status == "Demographics"
-):
-    demographics.demographics_verification()   
+# elif (
+#     st.session_state.counter >= 100
+#     and st.session_state.counter <= 200
+#     and st.session_state.page_status == "Demographics"
+# ):
+#     demographics.demographics_verification()
 
 elif(
     st.session_state.counter > 200

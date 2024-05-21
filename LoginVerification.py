@@ -7,9 +7,9 @@ import json
 import ast
 from st_files_connection import FilesConnection
 import os
+num_tweet = 20
 import gcsManage as gm
 
-num_tweet = 20
 
 
 def login_ver():
@@ -43,14 +43,13 @@ def login_ver():
             if st.session_state.UserIdentifier in set(existing_user_info["username"]):
                 # proceed to annotation
                 st.session_state.StartID = int(
-                    existing_user_info[
-                        existing_user_info["username"]
-                        == st.session_state.UserIdentifier
-                    ]["start_id"]
+                existing_user_info[
+                    existing_user_info["username"] == st.session_state.UserIdentifier
+                ]["start_id"].iloc[0]
                 )
 
-                # read completed Tweets from User unique Progress
 
+                # read completed Tweets from User unique Progress
                 conn = st.connection('gcs', type=FilesConnection)
                 user_progress_df_path = f"User{st.session_state.UserIdentifier}_progress.csv"
                 user_progress_df = conn.read("misinfo-harm/User_Progress/"+user_progress_df_path, input_format = "csv", ttl= 20)
@@ -68,16 +67,10 @@ def login_ver():
                 conn = st.connection('gcs', type=FilesConnection)
                 st.session_state.user_annotation_df = conn.read("misinfo-harm/User_Annotation/"+ user_df_path, input_format="csv", ttl= 20)
                           
-                st.session_state.page_status = "Instruction"
-                st.session_state.warning_visibility = False
+                
                 tmp_page = su.find_the_remaining()
                 st.session_state.current_page = int(tmp_page)
-                st.session_state.counter += 201
-            else:
-                # st.session_state.page_status = "Demographics"
-                st.session_state.warning_visibility = False
-                st.session_state.counter += 101
-                
+            else: # new user
                 conn = st.connection('gcs', type=FilesConnection)
                 existing_user_info = conn.read("misinfo-harm/users_all.csv", input_format="csv", ttl= 20)
 
@@ -85,6 +78,7 @@ def login_ver():
                 new_user_data = [
                     {
                         "username": st.session_state.UserIdentifier,
+                        "start_id": st.session_state.StartID,
                     }
                 ]
                 new_user_info = pd.DataFrame(new_user_data)
@@ -127,8 +121,10 @@ def login_ver():
                 abs_path = os.path.abspath(user_df_path)
                 gm.upload_csv(abs_path, "User_Annotation/"+user_df_path)
 
-                st.session_state.page_status = "Instruction"
-                st.session_state.counter += 100
+                
+            st.session_state.page_status = "Instruction"
+            st.session_state.warning_visibility = False
+            st.session_state.counter += 201
         else:
             st.session_state.warning_visibility = True
 

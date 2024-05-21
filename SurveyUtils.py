@@ -62,7 +62,6 @@ def find_the_remaining():
     else:
         return int(remaining[0])
 
-
 def embed_tweet_page(tweet_url):
     tweet_id = tweet_url.split("/")[-1]
     tweet = all_tweets[all_tweets["tweet_real_id"] == int(tweet_id)]
@@ -104,8 +103,8 @@ def embed_tweet_page(tweet_url):
 
 
 def get_survey_questions():
-    return ["Does the message content include an explicit call to action? The message addresses the reader using pronouns such as 'you, we, us' or implies the reader's involvement. It might ask the reader to post, share, tell others about something, join an event, stay tuned, or some other follow up action."
-            ,"Does the piece of content explicitly or implicilty incorporate coordination efforts, such as dates/times, locations, or other arrangment for a follow-up? For example, using words such as soon, now, in the coming days.",
+    return ["Does the message content include an explicit call to action? The message addresses the reader using pronouns such as 'you, we, us' or implies the reader's involvement. It might ask the reader to post, share, tell others about something, join an event, stay tuned, or some other follow up action.",
+            "Does the piece of content explicitly or implicilty incorporate coordination efforts, such as dates/times, locations, or other arrangment for a follow-up? For example, using words such as soon, now, in the coming days.",
             "Does the message provide a way that people might be directly harmed? For example identifying information about an individual that is not widely or publicly known.",
             "Does the message directly address or reference children or use language aimed at a younger audience?", 
             "Does this message directly address or reference the elderly community, a subgroup of the elderly, or discus topics aimed at them? For example, people on government pensions, nursing home residents, etc.", 
@@ -119,4 +118,5 @@ def get_survey_questions():
             "Does the message fit into a larger narrative that has been existing for some time?",
             "Does the message question or challenge the functioning of public institutions? Public institutions include schools, law enforcement, public transit, government agencies, etc.",
             "Does the message question other people in general within a community or society?",
-            "Was this Tweet posted before 2024?"]
+            "Was this Tweet posted before 2024?"
+            ]

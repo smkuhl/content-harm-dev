@@ -16,13 +16,6 @@ import gcsManage as gm
 
 def print_sidebar():
     with st.sidebar:
-        # st.session_state.current_page = su.paginator(
-        #     "Select a Tweet",
-        #     st.session_state.tweet_set,
-        #     st.session_state.current_page,
-        #     st.session_state.completed_tweet,
-        # )
-
         st.progress(
             int(
                 (len(st.session_state.completed_tweet)+1)
@@ -40,77 +33,65 @@ def print_sidebar():
 
         col1, col2 = st.columns(2)
 
-
-        # if (st.session_state.current_page+1)%2 == 0:
-        #     twitter_title = f"<div><span class='highlight darkslateblue'>Tweet {st.session_state.current_page+1}</span><br/>"
-        # else:
-        #     twitter_title = f"<div><span class='highlight my_red'>Tweet {st.session_state.current_page+1}</span><br/>"
-  
-        # # st.subheader(f"Tweet {st.session_state.current_page+1}")
-        # st.markdown(twitter_title, unsafe_allow_html=True)
         try:
             su.embed_tweet_page(st.session_state.tweet_set[st.session_state.current_page])
         except Exception as e:
             # Display the exception message to the user
             st.warning(f"An error occurred: {str(e)} Debug this! it shouldn't happen")
-        
-def print_form():
-    with st.form("my_form"):
 
-        # st.markdown("<a id='top'></a>", unsafe_allow_html=True)
-        
-        if (st.session_state.current_page+1)%2 == 0:
-            twitter_account = f"<div> You are viewing <span class='highlight darkslateblue'>Tweet {st.session_state.current_page+1}</span><br/>"
-        else:
-            twitter_account = f"<div> You are viewing <span class='highlight my_red'>Tweet {st.session_state.current_page+1}</span><br/>"
-        st.markdown(twitter_account, unsafe_allow_html=True)
+
+            
+         
+@st.experimental_fragment   
+def load_survey(questions):
+    for i, question in enumerate(questions):
+        response=st.radio(label=f"Q{i+1}: {question}", options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
+        st.session_state.responses[i] = response
+        if response == "Not Applicable":
+            text_response = st.text_input("Please add your reasoning for selecting not applicable", value='', key=f"{st.session_state.current_page+1}_{i}_text")
+            st.session_state.explanations[i] = text_response
+
     
-        questions = su.get_survey_questions()
-        responses = [None] * len(questions)
 
-        start_idx = [0, 3, 7, 9, 12]
-        headers = ["Actionability", "Exploitativeness", "Likelihood of Spread", "Believability", "Social Fragmentation"]
-        for i, question in enumerate(questions):
-            # display header if it's the first question in that section
-            if i in start_idx:
-                idx = start_idx.index(i)
-                st.subheader(f"{headers[idx]}")
+def print_form():
+    if (st.session_state.current_page+1)%2 == 0:
+        twitter_account = f"<div> You are viewing <span class='highlight darkslateblue'>Tweet {st.session_state.current_page+1}</span><br/>"
+    else:
+        twitter_account = f"<div> You are viewing <span class='highlight my_red'>Tweet {st.session_state.current_page+1}</span><br/>"
+    st.markdown(twitter_account, unsafe_allow_html=True)
+    
+    questions = su.get_survey_questions()
+    st.session_state.responses = [None] * len(questions)
+    st.session_state.explanations = {}
 
-            # bold first part of the question
-            parts = question.split('?', 1)
-            if len(parts) > 1:
-                bold_part = f"**{parts[0]}?**"
-                rest_part = parts[1].strip()
-                question_formatted = f"{bold_part}\n\n{rest_part}"
-            else:
-                question_formatted = f"**{question}**"
-                
-            # display question
-            st.session_state.is_text_form_disabled = True
-            # st.markdown(question_formatted, unsafe_allow_html=True)
-            response=st.radio(label=question_formatted, options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
-            responses[i] = response
-            
-            '''
-            # JavaScript to scroll to the top
-            scroll_to_top_js = """
-            <script>
-                window.onload = function() {
-                    window.scrollTo(0, 0);
-                }
-            </script>
-            """
-            st.markdown(scroll_to_top_js, unsafe_allow_html=True)
-            '''
+    with st.container(border=True):
+        load_survey(questions)
 
-        def submit_verify(responses):
+        
+        def check_unanswered(responses, explanations):
+            unanswered_questions = [f"Q{qid + 1}" for qid, resp in enumerate(responses) if resp is None or resp == ""]
+            unanswered_explanations = [f"Q{eid + 1}-reason" for eid, expl in explanations.items() if expl is None or expl == ""]
+            return unanswered_questions + unanswered_explanations
 
-            # Store current data to the database
-            # 1. Create a new df for this annotation
-            # 2. Check if a record for this UserIdentifier and TweetURL already exists
-            # 3. If yes, overwrite; Else, append to the end
-            
-            # 1. Create a new df for this annotation
+        def display_warning(unanswered_items):
+            if unanswered_items:
+                warning_message = f"Please answer all questions and provide necessary reasons. \n Missing Questions: {', '.join(unanswered_items)}"
+                st.warning(warning_message, icon="⚠️")
+                return False
+            return True
+
+        def handle_submission(responses, explanations):
+            unanswered_items = check_unanswered(responses, explanations)
+            if display_warning(unanswered_items):
+                submit_verify(responses, explanations)
+                st.session_state.counter += 1
+                if st.session_state.counter == st.session_state.annotation_number - 1:
+                    st.session_state.current_page = su.find_the_remaining()
+                else:
+                    st.session_state.current_page += 1
+                st.rerun()
+
+        def submit_verify(responses, explanations):
             new_data = {
                     "username": st.session_state.UserIdentifier,
                     "tweetURL": st.session_state.tweet_set[
@@ -118,10 +99,13 @@ def print_form():
                     ],
             }
             
-
             for i, response in enumerate(responses):
                 new_data[f"Q{i+1}"] = response
-             
+                if i in explanations:
+                    new_data[f"Q{i+1}-reason"] = explanations[i]
+                else:
+                    new_data[f"Q{i+1}-reason"] = ""
+                
             new_record = pd.DataFrame([new_data])
 
             # 2. Check if a record for this UserIdentifier and TweetURL already exists
@@ -139,8 +123,8 @@ def print_form():
                 if st.session_state.current_page in st.session_state.completed_tweet:
                     st.session_state.completed_tweet.remove(st.session_state.current_page)
                     st.session_state.user_annotation_df.loc[
-                        #TODO: update this question mask
-                        existing_record_mask, ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10", "Q11", "Q12", "Q13", "Q14", "Q15", "Q16"]
+                        existing_record_mask, ["Q1", "Q1-reason", "Q2", "Q2-reason", "Q3", "Q3-reason", "Q4", "Q4-reason", "Q5", "Q5-reason", "Q6", "Q6-reason", "Q7", "Q7-reason", \
+                            "Q8", "Q8-reason", "Q9", "Q9-reason", "Q10", "Q10-reason", "Q11", "Q11-reason", "Q12", "Q12-reason", "Q13", "Q13-reason", "Q14", "Q14-reason", "Q15", "Q15-reason", "Q16", "Q16-reason",]
                     ] = (
                         responses
                     )
@@ -179,49 +163,15 @@ def print_form():
             abs_path = os.path.abspath("local_new_user_progress.csv")
             gm.upload_csv(abs_path , "User_Progress/"+user_progress_df_path)
             
-                        
-            
-        if(len(st.session_state.completed_tweet) == st.session_state.annotation_number-1): 
-            submitted = st.form_submit_button(
-                "Finish & Continue", type="primary" # submit the final one
-            )
-
-            if submitted:
-                if None in responses:
-                    st.warning("Please answer all questions", icon="⚠️")
-                else:
-                    submit_verify(responses)
-                    st.session_state.counter += 1
-                    st.rerun()
-           
-        else:
-            submitted = st.form_submit_button(
-                "Save & Continue", type="primary" # submit an annotation
-            )
-
-            if submitted:
-                if None in responses:
-                    st.warning("Please answer all questions", icon="⚠️")
-                else:
-                    submit_verify(responses)
-                    if st.session_state.current_page != st.session_state.annotation_number-1:
-                        st.session_state.current_page += 1
-                    else:
-                        st.session_state.current_page = su.find_the_remaining()
-                    st.session_state.counter += 1
-                    st.rerun()
-            
-
-    st.write("\n")
-
-    # def proceed_previous():
-    #     if st.session_state.current_page > 0:
-    #         st.session_state.current_page -= 1
-    #     st.session_state.response=[]
-
-    # col1, col2 = st.columns(2)
-    # if st.session_state.current_page != 0:
-    #     prev_tweet = col1.button("Previous", on_click=proceed_previous)
+                                
+                
+                
+        button_label = "Finish & Continue" if len(st.session_state.completed_tweet) == st.session_state.annotation_number - 1 else "Save & Continue"
+        submitted = st.button(button_label, type="primary")
+        
+        if submitted:
+            handle_submission(st.session_state.responses, st.session_state.explanations)
+        st.write("\n")
            
 def print_helper():
     st.caption("Labeling")
