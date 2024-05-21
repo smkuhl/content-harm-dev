@@ -63,42 +63,44 @@ def find_the_remaining():
         return int(remaining[0])
 
 def embed_tweet_page(tweet_url):
-    tweet_id = tweet_url.split("/")[-1]
-    tweet = all_tweets[all_tweets["tweet_real_id"] == int(tweet_id)]
-    _name = urllib.parse.quote(tweet["user_name"].tolist()[0])
-    _handle = tweet["user_username"].tolist()[0]
-    _follower = tweet["user_followers_count"].tolist()[0]
-    _following = int(tweet["user_following_count"].tolist()[0])
-    _date = urllib.parse.quote(tweet["created_at"].tolist()[0])
-    _profileImage = tweet["profile_image_file"].tolist()[0]
-    _profileImageUrl = urllib.parse.quote(gm.generate_signed_url(file_path=f"{_profileImage}"), safe=':/')
-    _verified = tweet["user_verified"].tolist()[0]
-    _headline = urllib.parse.quote(tweet["user_description"].tolist()[0])
-    # _commentcount = tweet["reply_count"].tolist()[0]
-    _commentcount = 0
-    _retweetcount = tweet["retweet_count"].tolist()[0]
-    _favcount = tweet["like_count"].tolist()[0]
-    _text = urllib.parse.quote(tweet["text"].tolist()[0])
-    # _viewcount = tweet["impression_count"].tolist()[0]
-    _viewcount = 0
-    # _bookmark = tweet["bookmark_count"].tolist()[0]
-    _bookmark = 0
-    _imgurls = tweet["media_details"].tolist()[0]
-    if str(_imgurls) != "nan" and _imgurls != "":
-        try:
-            my_list = _imgurls.split(",")
-            tmp = ""
-            for i in range(0, len(my_list)):
-                tmp += (my_list[i].split("photo:"))[1]
-                if i != (len(my_list)-1):
-                    tmp += ","
-            _imgurls = tmp
-        except:
-            _imgurls = _imgurls
-    else:
-        _imgurls = ""
-    formatted = f"https://linqiu0-0.github.io/fake-tweet-card/?name={_name}&date={_date}&handle={_handle}&profileImageUrl={_profileImageUrl}&follower={_follower}&following={_following}&verified={_verified}&headline={_headline}&commentCount={_commentcount}&retweetCount={_retweetcount}&favoriteCount={_favcount}&text={_text}&viewCount={_viewcount}&bookmark={_bookmark}&imageUrls={_imgurls}"
-    components.iframe(formatted, height=1500)
+    if not st.session_state.formatted_link:
+        tweet_id = tweet_url.split("/")[-1]
+        tweet = all_tweets[all_tweets["tweet_real_id"] == int(tweet_id)]
+        _name = urllib.parse.quote(tweet["user_name"].tolist()[0])
+        _handle = tweet["user_username"].tolist()[0]
+        _follower = tweet["user_followers_count"].tolist()[0]
+        _following = int(tweet["user_following_count"].tolist()[0])
+        _date = urllib.parse.quote(tweet["created_at"].tolist()[0])
+        _profileImage = tweet["profile_image_file"].tolist()[0]
+        _profileImageUrl = urllib.parse.quote(gm.generate_signed_url(file_path=f"{_profileImage}"), safe=':/')
+        _verified = tweet["user_verified"].tolist()[0]
+        _headline = urllib.parse.quote(tweet["user_description"].tolist()[0])
+        # _commentcount = tweet["reply_count"].tolist()[0]
+        _commentcount = 0
+        _retweetcount = tweet["retweet_count"].tolist()[0]
+        _favcount = tweet["like_count"].tolist()[0]
+        _text = urllib.parse.quote(tweet["text"].tolist()[0])
+        # _viewcount = tweet["impression_count"].tolist()[0]
+        _viewcount = 0
+        # _bookmark = tweet["bookmark_count"].tolist()[0]
+        _bookmark = 0
+        _imgurls = tweet["media_details"].tolist()[0]
+        if str(_imgurls) != "nan" and _imgurls != "":
+            try:
+                my_list = _imgurls.split(",")
+                tmp = ""
+                for i in range(0, len(my_list)):
+                    tmp += (my_list[i].split("photo:"))[1]
+                    if i != (len(my_list)-1):
+                        tmp += ","
+                _imgurls = tmp
+            except:
+                _imgurls = _imgurls
+        else:
+            _imgurls = ""
+        formatted = f"https://linqiu0-0.github.io/fake-tweet-card/?name={_name}&date={_date}&handle={_handle}&profileImageUrl={_profileImageUrl}&follower={_follower}&following={_following}&verified={_verified}&headline={_headline}&commentCount={_commentcount}&retweetCount={_retweetcount}&favoriteCount={_favcount}&text={_text}&viewCount={_viewcount}&bookmark={_bookmark}&imageUrls={_imgurls}"
+        st.session_state.formatted_link = formatted
+    components.iframe(st.session_state.formatted_link, height=1500)
 
 
 

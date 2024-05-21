@@ -39,6 +39,8 @@ def state_initializer():
         st.session_state["navigation"] = 0
     if "emergency_round" not in st.session_state:
         st.session_state["emergency_round"] = 0
+    if "formatted_link" not in st.session_state:
+        st.session_state["formatted_link"] = ''
     
     # Store Demographics
     if "age" not in st.session_state:

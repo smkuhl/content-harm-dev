@@ -42,7 +42,6 @@ def print_sidebar():
 
             
          
-@st.experimental_fragment   
 def load_survey(questions):
     for i, question in enumerate(questions):
         response=st.radio(label=f"Q{i+1}: {question}", options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
@@ -89,6 +88,8 @@ def print_form():
                     st.session_state.current_page = su.find_the_remaining()
                 else:
                     st.session_state.current_page += 1
+
+                st.session_state.formatted_link = None
                 st.rerun()
 
         def submit_verify(responses, explanations):
