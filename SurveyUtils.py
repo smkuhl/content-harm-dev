@@ -11,7 +11,7 @@ import urllib.parse
 from urllib.parse import urlencode
 
 conn = st.connection('gcs', type=FilesConnection)
-all_tweets = conn.read("misinfo-harm/round3_tweets.csv", input_format="csv")
+all_tweets = conn.read("misinfo-harm/tweet_data_formatted_5-29.csv", input_format="csv", encoding="utf-8")
 
 def disable():
     st.session_state.disabled = True

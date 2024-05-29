@@ -10,11 +10,11 @@ from st_files_connection import FilesConnection
 # This library handles the distribution & management of survey data.
 group_size = 9
 num_tweet = 9
-tweet_dataset_filepath = "misinfo-harm/round3_tweets.csv"
+tweet_dataset_filepath = "misinfo-harm/tweet_data_formatted_5-29.csv"
 
 def get_tweet_set_random():
     conn = st.connection('gcs', type=FilesConnection)
-    df = conn.read(tweet_dataset_filepath,input_format="csv")
+    df = conn.read(tweet_dataset_filepath,input_format="csv", encoding="utf-8")
 
     group_num = max(df['Group'].tolist())
     rounds = int(st.session_state.annotation_number / group_size)
