@@ -25,10 +25,10 @@ def print_sidebar():
         )
         latest_iteration = st.empty()
         latest_iteration.text(
-            f"{len(st.session_state.completed_tweet)}"
+            "You are on Tweet "
+            f"{len(st.session_state.completed_tweet) + 1}"
             + "/" 
             + f"{st.session_state.annotation_number}"
-            + " Tweet annotations completed."
         )
 
         col1, col2 = st.columns(2)
