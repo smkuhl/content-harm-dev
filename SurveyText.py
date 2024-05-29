@@ -65,7 +65,6 @@ def print_annotation_guide():
     st.write
     st.write(
         """
-        You are going to view a series of Tweets.
         For each Tweet shown on the left, please answer the following questions.
         """
     )

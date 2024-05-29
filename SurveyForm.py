@@ -70,11 +70,13 @@ def load_survey(questions):
     
 
 def print_form():
+    '''
     if (st.session_state.current_page+1)%2 == 0:
         twitter_account = f"<div> You are viewing <span class='highlight darkslateblue'>Tweet {st.session_state.current_page+1}</span><br/>"
     else:
         twitter_account = f"<div> You are viewing <span class='highlight my_red'>Tweet {st.session_state.current_page+1}</span><br/>"
     st.markdown(twitter_account, unsafe_allow_html=True)
+    '''
     
     questions = su.get_survey_questions()
     st.session_state.responses = [None] * len(questions)
