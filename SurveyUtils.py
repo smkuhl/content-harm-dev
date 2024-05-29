@@ -86,6 +86,7 @@ def embed_tweet_page(tweet_url):
         _bookmark = 0
         _imgurls = tweet["media_details"].tolist()[0]
         if str(_imgurls) != "nan" and _imgurls != "":
+            '''
             try:
                 my_list = _imgurls.split(",")
                 tmp = ""
@@ -95,7 +96,8 @@ def embed_tweet_page(tweet_url):
                         tmp += ","
                 _imgurls = tmp
             except:
-                _imgurls = _imgurls
+            '''
+            _imgurls = _imgurls
         else:
             _imgurls = ""
         formatted = f"https://linqiu0-0.github.io/fake-tweet-card/?name={_name}&date={_date}&handle={_handle}&profileImageUrl={_profileImageUrl}&follower={_follower}&following={_following}&verified={_verified}&headline={_headline}&commentCount={_commentcount}&retweetCount={_retweetcount}&favoriteCount={_favcount}&text={_text}&viewCount={_viewcount}&bookmark={_bookmark}&imageUrls={_imgurls}"
