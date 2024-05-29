@@ -1,5 +1,5 @@
 import streamlit as st
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
 
 import pandas as pd
 import numpy as np
@@ -17,6 +17,16 @@ import SurveyState as survey_state
 import SurveyForm as survey_form
 import Demographics as demographics
 import LoginVerification as login_verification
+
+st.markdown(
+        """
+       <style>
+       [data-testid="stSidebar"][aria-expanded="true"]{
+           min-width: 40vw;
+       }
+       """,
+        unsafe_allow_html=True,
+    )   
 
 num_tweet = 20  # i.e st.session_state.annotation_number, easier for referencing
 # css_path = os.path.abspath("style/style.css")
