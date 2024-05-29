@@ -1,7 +1,7 @@
 import streamlit as st
 
 #TODO: update the num tweet
-num_tweet = 9
+num_tweet = 6
 import pandas as pd
 
 def state_initializer():

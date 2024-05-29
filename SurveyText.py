@@ -17,7 +17,7 @@ def print_intro():
         
         :warning: **Content Warning**
         
-        This study may contain tweets with, but not limited to, violence, abusive language, or death, which may be disturbing. TODO: (You may skip questions or submit the survey at any time.) (because technically you can't skip tweets) You must be above 18 to participate in the annotation. We advise discretion while proceeding.
+        This study may contain tweets with, but not limited to, violence, abusive language, or death, which may be disturbing. You must be above 18 to participate in the annotation. We advise discretion while proceeding.
         
 
 

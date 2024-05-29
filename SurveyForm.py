@@ -109,7 +109,8 @@ def print_form():
                     st.session_state.current_page += 1
 
                 st.session_state.formatted_link = None
-                st.rerun()
+                st.components.v1.html("<script>window.scrollTo(0, 0);</script>")  # Scroll to top
+                st.experimental_rerun()
 
         def submit_verify(responses, explanations):
             new_data = {
