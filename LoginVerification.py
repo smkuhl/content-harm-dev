@@ -7,7 +7,6 @@ import json
 import ast
 from st_files_connection import FilesConnection
 import os
-num_tweet = 20
 import gcsManage as gm
 
 
