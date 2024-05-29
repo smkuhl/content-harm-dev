@@ -43,8 +43,25 @@ def print_sidebar():
             
          
 def load_survey(questions):
+    start_idx = [0, 3, 7, 9, 12]
+    headers = ["Actionability", "Exploitativeness", "Likelihood of Spread", "Believability", "Social Fragmentation"]
+
     for i, question in enumerate(questions):
-        response=st.radio(label=f"Q{i+1}: {question}", options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
+        # display the header if it's the first question in that section
+        if i in start_idx:
+                idx = start_idx.index(i)
+                st.subheader(f"{headers[idx]}")
+
+        # bold first part of the question
+        parts = question.split('?', 1)
+        if len(parts) > 1:
+            bold_part = f"**{parts[0]}?**"
+            rest_part = parts[1].strip()
+            question_formatted = f"{bold_part}\n\n{rest_part}"
+        else:
+            question_formatted = f"**{question}**"
+
+        response=st.radio(label=f"Q{i+1}: {question_formatted}", options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
         st.session_state.responses[i] = response
         if response == "Not Applicable":
             text_response = st.text_input("Please add your reasoning for selecting not applicable", value='', key=f"{st.session_state.current_page+1}_{i}_text")
