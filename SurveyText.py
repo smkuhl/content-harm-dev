@@ -60,12 +60,12 @@ def print_intro():
     )
 
 def print_annotation_guide():
-    st.write('#')
+    # st.write('#')
     st.title("Tweet Annotation")
     st.write
     st.write(
         """
-        You are going view a series of Tweets. \n
+        You are going to view a series of Tweets.
         For each Tweet shown on the left, please answer the following questions.
         """
     )
