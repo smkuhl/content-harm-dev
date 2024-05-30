@@ -8,8 +8,7 @@ from st_files_connection import FilesConnection
 
 
 # This library handles the distribution & management of survey data.
-group_size = 9
-num_tweet = 9
+group_size = 6
 tweet_dataset_filepath = "misinfo-harm/round3_tweets.csv"
 
 def get_tweet_set_random():
