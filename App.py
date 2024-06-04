@@ -23,14 +23,13 @@ st.markdown(
        <style>
        [data-testid="stSidebar"][aria-expanded="true"]{
            min-width: 40vw;
+           max-width:80vw;
        }
        """,
         unsafe_allow_html=True,
     )   
 
-num_tweet = 20  # i.e st.session_state.annotation_number, easier for referencing
-# css_path = os.path.abspath("style/style.css")
-# su.local_css(css_path)
+
 survey_state.state_initializer()
 
 ####### intro page
@@ -68,6 +67,7 @@ elif (
     st.session_state.counter >= 300
     and len(st.session_state.completed_tweet) < st.session_state.annotation_number
 ):
+
     survey_text.print_annotation_guide()
     survey_form.print_sidebar()
     survey_form.print_form()

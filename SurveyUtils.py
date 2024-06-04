@@ -11,7 +11,7 @@ import urllib.parse
 from urllib.parse import urlencode
 
 conn = st.connection('gcs', type=FilesConnection)
-all_tweets = conn.read("misinfo-harm/round3_tweets.csv", input_format="csv", encoding="utf-8")
+all_tweets = conn.read("misinfo-harm/emoji.csv", input_format="csv", encoding="utf-8")
 
 def disable():
     st.session_state.disabled = True
@@ -71,7 +71,7 @@ def embed_tweet_page(tweet_url):
         _follower = tweet["user_followers_count"].tolist()[0]
         _following = int(tweet["user_following_count"].tolist()[0])
         _date = urllib.parse.quote(tweet["created_at"].tolist()[0])
-        _profileImage = tweet["profile_image_file"].tolist()[0]
+        _profileImage = tweet["profile_img_file"].tolist()[0]
         _profileImageUrl = urllib.parse.quote(gm.generate_signed_url(file_path=f"{_profileImage}"), safe=':/')
         _verified = tweet["user_verified"].tolist()[0]
         _headline = urllib.parse.quote(tweet["user_description"].tolist()[0])
@@ -87,10 +87,10 @@ def embed_tweet_page(tweet_url):
         _imgurls = tweet["media_details"].tolist()[0]
         if str(_imgurls) != "nan" and _imgurls != "":
             try:
-                my_list = _imgurls.split(",")
+                my_list = _imgurls.split(";")
                 tmp = ""
                 for i in range(0, len(my_list)):
-                    tmp += (my_list[i].split("photo:"))[1]
+                    tmp += my_list[i]
                     if i != (len(my_list)-1):
                         tmp += ","
                 _imgurls = tmp
@@ -101,8 +101,7 @@ def embed_tweet_page(tweet_url):
         formatted = f"https://linqiu0-0.github.io/fake-tweet-card/?name={_name}&date={_date}&handle={_handle}&profileImageUrl={_profileImageUrl}&follower={_follower}&following={_following}&verified={_verified}&headline={_headline}&commentCount={_commentcount}&retweetCount={_retweetcount}&favoriteCount={_favcount}&text={_text}&viewCount={_viewcount}&bookmark={_bookmark}&imageUrls={_imgurls}"
         st.session_state.formatted_link = formatted
     components.iframe(st.session_state.formatted_link, height=1500)
-
-
+"https://linqiu0-0.github.io/fake-tweet-card/?name=Yakov%20%F0%9F%9A%B2%F0%9F%9A%83%F0%9F%9A%A0%F0%9F%8E%97&date=2020-04-20T16%3A20%3A00-0400&handle=transitive_bs&profileImageUrl=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F1554552556017295360%2FqMTXT-4A_normal.jpg&follower=322&following=534&verified=true&headline=Working%20to%20end%20career%20retaliation%20against%20%23survivors%20of%20sexual%20violence%20in%20Hollywood.%20Founded%20by%20%23SilenceBreaker%20%40sarahannmasse.%20%23HireSurvivorsHollywood&commentCount=300&retweetCount=2517&favoriteCount=16342&text=Happy%20%5CSunday%20to%20the%20%23HireSurvivorsHollywood%20Community!%20We%27ve%20decided%20to%20use%20Sundays%20to%20highlight%20%23survivors%20and%20%23SilenceBreakers%20and%20the%20wonderful%20work%20they%27re%20doing!%0AToday%20we%27re%20celebrating%20Amber%20Heard%20(%23AmberHeard)!%20https%3A%2F%2Ft.co%2FrCigkEijIY&viewCount=5000&bookmark=67897&imageUrls=https%3A%2F%2Fpbs.twimg.com%2Fmedia%2FFiDqxUqWIAA_4RY%3Fformat%3Djpg%26name%3Dlarge,https%3A%2F%2Fpbs.twimg.com%2Fmedia%2FFYUKXwFWAAEPeUV%3Fformat%3Djpg%26name%3Dsmall,https%3A%2F%2Fpbs.twimg.com%2Fmedia%2FFYUKXwFWAAEPeUV%3Fformat%3Djpg%26name%3Dsmall,https%3A%2F%2Fpbs.twimg.com%2Fmedia%2FFj8lwiZXwAA8iyO%3Fformat%3Djpg%26name%3Dmedium"
 
 def get_survey_questions():
     return ["Does the message content include an explicit call to action? The message addresses the reader using pronouns such as 'you, we, us' or implies the reader's involvement. It might ask the reader to post, share, tell others about something, join an event, stay tuned, or some other follow up action.",
