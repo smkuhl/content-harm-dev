@@ -41,10 +41,10 @@ def login_ver():
 
             if st.session_state.UserIdentifier in set(existing_user_info["username"]):
                 # proceed to annotation
-                st.session_state.StartID = int(
+                st.session_state.GroupID = int(
                 existing_user_info[
                     existing_user_info["username"] == st.session_state.UserIdentifier
-                ]["start_id"].iloc[0]
+                ]["group_id"].iloc[0]
                 )
 
 
@@ -62,7 +62,7 @@ def login_ver():
                 st.session_state.tweet_set = ast.literal_eval(user_progress_df["tweet_set"].iloc[0])
 
                 # Load User Annotation
-                user_df_path = f"User{st.session_state.UserIdentifier}_annotation.csv"
+                user_df_path = f"User_{st.session_state.UserIdentifier}_annotation.csv"
                 conn = st.connection('gcs', type=FilesConnection)
                 st.session_state.user_annotation_df = conn.read("misinfo-harm/User_Annotation/"+ user_df_path, input_format="csv", ttl= 20)
                           
@@ -73,26 +73,25 @@ def login_ver():
                 conn = st.connection('gcs', type=FilesConnection)
                 existing_user_info = conn.read("misinfo-harm/users_all.csv", input_format="csv", ttl= 20)
 
-                survey_data.get_tweet_set_random() # get a tweet_set based on the demographics information.
+                survey_data.get_tweet_set_random() 
                 new_user_data = [
                     {
                         "username": st.session_state.UserIdentifier,
-                        "start_id": st.session_state.StartID,
+                        "group_id": st.session_state.GroupID,
                     }
                 ]
                 new_user_info = pd.DataFrame(new_user_data)
                 df_to_store = pd.concat(
                     [existing_user_info, new_user_info], ignore_index=True
                 )
-                df_to_store.to_csv("local_new_progress.csv",index= False)
-                abs_path = os.path.abspath("local_new_progress.csv")
-                gm.upload_csv(abs_path, 'users_all.csv')
+                local_new_progress = df_to_store.to_csv(index= False)
+                gm.upload_csv(local_new_progress, 'users_all.csv')
 
                 # User Unique Progress CSV
                 template_data_user_progress = [
                     {
                         "username": st.session_state.UserIdentifier,
-                        "start_id": st.session_state.StartID,
+                        "group_id": st.session_state.GroupID,
                         "completed_tweet": str(st.session_state.completed_tweet),
                         "tweet_set":str(st.session_state.tweet_set),
                         "emergency_round": str({st.session_state.emergency_round:"-"})            
@@ -100,9 +99,8 @@ def login_ver():
                 ]
                 df_user_progress = pd.DataFrame(template_data_user_progress)
                 user_progress_df_path = f"User{st.session_state.UserIdentifier}_progress.csv"
-                df_user_progress.to_csv(user_progress_df_path, index = False)
-                abs_path = os.path.abspath(user_progress_df_path)
-                gm.upload_csv(abs_path, "User_Progress/"+user_progress_df_path)
+                df_user_progress_csv = df_user_progress.to_csv(index = False)
+                gm.upload_csv(df_user_progress_csv, "User_Progress/"+user_progress_df_path)
 
                 # User Annotation CSV
                 questions = su.get_survey_questions()
@@ -115,10 +113,9 @@ def login_ver():
                 for i in range(len(questions)):
                     template_data[0][f"Q{i+1}"] = "sample"
                 st.session_state.user_annotation_df = pd.DataFrame(template_data)
-                user_df_path = f"User{st.session_state.UserIdentifier}_annotation.csv"
-                st.session_state.user_annotation_df.to_csv(user_df_path, index = False)
-                abs_path = os.path.abspath(user_df_path)
-                gm.upload_csv(abs_path, "User_Annotation/"+user_df_path)
+                user_df_path = f"User_{st.session_state.UserIdentifier}_annotation.csv"
+                user_annotation_df_csv = st.session_state.user_annotation_df.to_csv(index = False)
+                gm.upload_csv(user_annotation_df_csv, "User_Annotation/" + user_df_path)
 
                 
             st.session_state.page_status = "Instruction"

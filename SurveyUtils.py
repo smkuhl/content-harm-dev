@@ -9,6 +9,7 @@ import os
 from math import nan
 import urllib.parse
 from urllib.parse import urlencode
+import pandas as pd
 
 conn = st.connection('gcs', type=FilesConnection)
 all_tweets = conn.read("misinfo-harm/tweet_data_formatted_pt3.csv", input_format="csv", encoding="utf-8")
@@ -74,12 +75,14 @@ def embed_tweet_page(tweet_url):
         _profileImage = tweet["profile_img_file"].tolist()[0]
         _profileImageUrl = urllib.parse.quote(gm.generate_signed_url(file_path=f"{_profileImage}"), safe=':/')
         _verified = tweet["user_verified"].tolist()[0]
-        _headline = urllib.parse.quote(tweet["user_description"].tolist()[0])
+        user_description = tweet["user_description"].tolist()[0] if pd.notna(tweet["user_description"].iloc[0]) else ""
+        _headline = urllib.parse.quote(user_description)
         # _commentcount = tweet["reply_count"].tolist()[0]
         _commentcount = 0
         _retweetcount = tweet["retweet_count"].tolist()[0]
         _favcount = tweet["like_count"].tolist()[0]
-        _text = urllib.parse.quote(tweet["text"].tolist()[0])
+        text = tweet["text"].tolist()[0] if pd.notna(tweet["text"].iloc[0]) else ""
+        _text = urllib.parse.quote(text)
         # _viewcount = tweet["impression_count"].tolist()[0]
         _viewcount = 0
         # _bookmark = tweet["bookmark_count"].tolist()[0]
