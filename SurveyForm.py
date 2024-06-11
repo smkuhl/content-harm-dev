@@ -61,7 +61,13 @@ def load_survey(questions):
         else:
             question_formatted = f"**{question}**"
 
-        response=st.radio(label=f"Q{i+1}: {question_formatted}", options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
+        # handle custom answers besides just yes, no, na
+        if i == 11: # index of not an organization question
+            response=st.radio(label=f"Q{i+1}: {question_formatted}", options=["Yes", "No", "Not an Organization", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
+        elif i == 9: # index of lack of high quality information
+            response=st.radio(label=f"Q{i+1}: {question_formatted}", options=["Yes, there is a lack of high quality information", "Yes, there is information but it is low quality", "No, there is high quality information"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
+        else:
+            response=st.radio(label=f"Q{i+1}: {question_formatted}", options=["Yes", "No", "Not Applicable"], horizontal=True, index=None, key=f"{st.session_state.current_page+1}_{i}")
         st.session_state.responses[i] = response
         if response == "Not Applicable":
             text_response = st.text_input("Please add your reasoning for selecting not applicable", value='', key=f"{st.session_state.current_page+1}_{i}_text")
