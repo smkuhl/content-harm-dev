@@ -33,6 +33,7 @@ Cover Page -> Demographics -> Instruction -> Annotation -> End Cover
 your_gcs_bucket
 │   all-tweet.csv # Upload your data
 │   users_all.csv # Register users
+|   group_annotation_progress.csv # track annotated groups
 │
 └───User_Annotation # User's annotation for each Tweet
 │   │   User{user1}_annotation.csv
@@ -45,11 +46,11 @@ your_gcs_bucket
     │   ... 
 ```
 
-- all-tweet.csv.
+- all-tweet.csv: [View Example](https://docs.google.com/spreadsheets/d/1mTR5FnOJsd_ph3UP-8trZMn2_fzn3u2nxfhWjm3_ASQ/edit?usp=sharing)
 - users_all.csv: [user_id, randomized_tweet_group_start_id, age, education, politic_ideology]
 - User{user1}_annotation.csv: [username, tweetURL, Q1, Q2, Q3, Q4]
-- User{user1}_progress.csv: [username, start_id, completed_tweet, , emergency_round]
-
+- User{user1}_progress.csv: [username, group_id, completed_tweet, , emergency_round]
+-group_annotation_progress.csv: [View Example](https://docs.google.com/spreadsheets/d/1mTR5FnOJsd_ph3UP-8trZMn2_fzn3u2nxfhWjm3_ASQ/edit?usp=sharing)
 
 2. Clone the repository, upload the codes to your Github.
 3. Go to [Stremlit Cloud](https://share.streamlit.io/) and create a New App.

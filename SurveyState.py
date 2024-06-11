@@ -7,8 +7,8 @@ import pandas as pd
 def state_initializer():
     if "annotation_number" not in st.session_state:
         st.session_state["annotation_number"] = num_tweet
-    if "StartID" not in st.session_state:
-        st.session_state["StartID"] = "0"
+    if "GroupID" not in st.session_state:
+        st.session_state["GroupID"] = "1"
     if "TweetID" not in st.session_state:
         st.session_state["TweetID"] = "na"
     if "Q1" not in st.session_state:
