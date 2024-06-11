@@ -116,7 +116,7 @@ def get_survey_questions():
             "Are the people or entities known to be repeat spreaders of questionable information? Hint: search the name of the author/poster and find whether they have been debunked before posting the current Tweet.",
             "Is there a lack of high-quality information that is refuting the message's claim? Do a quick internet search based on the Tweet content and see if there is any debunking information.",
             "Does the poster and/or organization/outlet have a noteworthy number of social media/community followers?",
-            "Is the content published by an organization/outlet with transparent editorial control? Editorial control refers to the ability to review, standardize, or veto content. If the poster is not an organization or outlet select N/A.",
+            "Is the content published by an organization/outlet with transparent editorial control? Editorial control refers to the ability to review, standardize, or veto content.",
             "Does the message fit into a larger narrative that has been existing for some time?",
             "Does the message question or challenge the functioning of public institutions? Public institutions include schools, law enforcement, public transit, government agencies, etc.",
             "Does the message question other people in general within a community or society?",
