@@ -5,6 +5,8 @@ import altair as alt
 import random
 import SurveyUtils as su
 from st_files_connection import FilesConnection
+import datetime
+import gcsManage as gm
 
 
 # This library handles the distribution & management of survey data.
@@ -12,34 +14,81 @@ group_size = 6
 tweet_dataset_filepath = "misinfo-harm/tweet_data_formatted_pt3.csv"
 
 def get_tweet_set_random():
+    """
+    Selects a random group of tweets for annotation based on their annotation status and count. The function prioritizes 
+    tweet groups that have the minimum count of annotations to ensure balanced annotation across groups during each round 
+    of annotation. 
+
+    The function ensures that groups marked as 'Annotating' and not completed within 24 hours are considered 'Unannotated' 
+    again. This is to handle cases where an annotation process may have been started but not finished. 
+
+    Annotated_Count refers how many times this tweet group has been completed, not how many times it has been assigned to 
+    annotate
+    
+    Returns:
+        list: A list of tweet URLs from the selected group for annotation.
+    """
+
     conn = st.connection('gcs', type=FilesConnection)
-    df = conn.read(tweet_dataset_filepath,input_format="csv", encoding="utf-8")
+    tweet_info = conn.read(tweet_dataset_filepath,input_format="csv", encoding="utf-8")
+    # annotation progress
+    df = conn.read("misinfo-harm/group_annotation_progress.csv",input_format="csv", encoding="utf-8")
+    
 
-    group_num = max(df['Group'].tolist())
-    rounds = int(st.session_state.annotation_number / group_size)
-    group_id = []
-    tmp =  random.randint(1, group_num)
-    while rounds > 0:
-        group_id.append(tmp)
-        if(tmp+1 > group_num):
-            tmp = (tmp+1) % group_num
+    time_threshold = datetime.timedelta(days=1).total_seconds()
+    current_time = datetime.datetime.now()
+
+    
+    # Get the group with the minimum annotation count
+    min_count = df['Annotated_Count'].min()
+    candidate_groups = df[(df['Annotated_Count'] == min_count)]
+
+    # Eligible group is either never assigned in the current round or the last annotation expires     
+    eligible_groups = candidate_groups[
+        (candidate_groups['Status'] == 'Unannotated') | 
+        ((candidate_groups['Status'] == 'Annotating') & (int(current_time.timestamp()) - candidate_groups['Last_Annotated'] > time_threshold))
+    ]
+
+    # If no eligible groups found, handle groups based on their status and last annotated time
+    if eligible_groups.empty:
+        # Find groups that are currently being annotated and select the one with the oldest annotation start
+        annotating_groups = df[df['Status'] == 'Annotating']
+        if not annotating_groups.empty:
+            # Sort these groups by 'Last_Annotated' to find the oldest
+            oldest_group = annotating_groups.sort_values('Last_Annotated', ascending=True).iloc[0]['Group']
+            selected_group = oldest_group
         else:
-            tmp += 1
-        rounds -= 1
-    tweet_set = []
+            # If no groups are in 'Annotating' state, assume all groups are fully annotated
+            # Randomly select any group to restart annotation process
+            df['Status'] = 'Unannotated'
+            df['Last_Annotated'] = pd.NaT
+            selected_group = random.choice(df['Group'].unique())
+    else:
+        selected_group = random.choice(eligible_groups['Group'].unique())
+
+    # Update the DataFrame for the selected group
+    df.loc[df['Group'] == selected_group, 'Status'] = 'Annotating'
+    df.loc[df['Group'] == selected_group, 'Last_Annotated'] = current_time.timestamp()
+    df.loc[df['Group'] == selected_group, 'Last_Annotated_time'] = current_time
+
+    gm.upload_csv(df.to_csv(index=False), "group_annotation_progress.csv")
+
+    
+    # Filter tweets for annotation
+    tweet_set = tweet_info[tweet_info['Group'] == selected_group]['tweet_url'].tolist()
 
 
-    for i in group_id:
-        filtered = df[(df['Group'] == i)]['tweet_url'].tolist()
-        tweet_set += filtered
-
-        
-    start_id = (group_id[0]-1)*group_size + 1
     st.session_state["current_page"] = 0
     st.session_state["tweet_set"] = tweet_set
-    st.session_state["StartID"] = start_id
+    st.session_state["GroupID"] = selected_group
     st.session_state["completed_tweet"] = []
 
+def update_annotation_count():
+    conn = st.connection('gcs', type=FilesConnection)
+    # annotation progress
+    df = conn.read("misinfo-harm/group_annotation_progress.csv",input_format="csv", encoding="utf-8")
+    df.loc[df['Group'] == st.session_state["GroupID"], 'Annotated_Count'] += 1
+    gm.upload_csv(df.to_csv(index=False), "group_annotation_progress.csv")
 
 def cluster_demographics():
     demo_label = ""
