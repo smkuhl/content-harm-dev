@@ -38,7 +38,7 @@ def print_intro():
 
         For each Tweet, you will annotate their potential harms from five different perspectives: actionability, exploitativeness, likelihood of spread, believability, and social fragmentation.
 
-        You may the use internet to search any topics, people, organizations, etc. However we encourage you to not spend to much time on questions you do not know the answer to. Please refrain from looking up the tweet directly or using any AI agent such as ChatGPT, Bard, or Bing Chat. 
+        You may the use internet to search any topics, people, organizations, etc. However we encourage you to not spend to much time on questions you do not know the answer to. Please refrain from looking up the tweet directly or using any AI agent such as ChatGPT, Bard, Bing Chat, Gemini, or Microsoft Copilot. 
       
         """
     )
