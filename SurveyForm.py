@@ -202,15 +202,15 @@ def print_form():
         if submitted:
             handle_submission(st.session_state.responses, st.session_state.explanations)
    
-        js = '''
-            <script>
-                var body = window.parent.document.querySelector(".main");
-                console.log(body);
-                body.scrollTop = 0;
-            </script>
-            '''
-        st.components.v1.html(js)  
-        st.write("\n")
+            js = '''
+                <script>
+                    var body = window.parent.document.querySelector(".main");
+                    console.log(body);
+                    body.scrollTop = 0;
+                </script>
+                '''
+            st.components.v1.html(js)  
+            st.write("\n")
            
 def print_helper():
     st.caption("Labeling")
