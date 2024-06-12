@@ -165,6 +165,15 @@ def print_form():
                     "Your response has been saved!",
                     icon="✅",
                 )
+                js = '''
+                    <script>
+                        var body = window.parent.document.querySelector(".main");
+                        console.log(body);
+                        body.scrollTop = 0;
+                    </script>
+                    '''
+                st.components.v1.html(js)  
+                st.write("\n")
                 
 
             st.session_state.completed_tweet.append(st.session_state.current_page)
