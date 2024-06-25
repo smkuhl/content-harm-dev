@@ -47,7 +47,7 @@ def print_intro():
 
 
     st.write("\n")
-    st.write(" ")
+    # st.write(" ")
     st.write(
         """
         After submitting the survey, click on the link provided to be redirected. This will provide proof of completion.
@@ -84,6 +84,7 @@ def print_ending():
     st.write(
         """
         Please follow this link to confirm your completion for Prolific: https://app.prolific.com/submissions/complete?cc=C1KIPIVY
+        
         Should you have any inquiries, please contact us at smkuhl@cs.washington.edu.
         We would like to thank you again for the participation! :)
         """
