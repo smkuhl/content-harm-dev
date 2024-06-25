@@ -27,6 +27,8 @@ def print_intro():
         Your privacy is our top priority. All information provided will be used exclusively for research purposes, kept confidential, and anonymized.
 
         You have the right to withdraw your participation and request data deletion at any time. We assure you that your privacy will be strictly protected. 
+        
+        If you have further questions please refer to the informed consent document linked here: https://docs.google.com/document/d/1jTi09qlNNxBrigLO3ievk5zmKf-Yoraj/edit?usp=sharing&ouid=115845601585144527295&rtpof=true&sd=true
 
 
 
@@ -34,11 +36,11 @@ def print_intro():
 
         :memo: **What Will You Do**
          
-        You will read 10 Tweets. 
+        You will read a series of tweets. 
 
         For each Tweet, you will annotate their potential harms from five different perspectives: actionability, exploitativeness, likelihood of spread, believability, and social fragmentation.
 
-        You may the use internet to search any topics, people, organizations, etc. However we encourage you to not spend to much time on questions you do not know the answer to. Please refrain from looking up the tweet directly or using any AI agent such as ChatGPT, Bard, Bing Chat, Gemini, or Microsoft Copilot. 
+        You should use the internet to search any topics, people, organizations, etc. However we encourage you to not spend to much time on questions you do not know the answer to. Please refrain from looking up the tweet directly or using any AI agent such as ChatGPT, Bard, Bing Chat, Gemini, or Microsoft Copilot. 
       
         """
     )
@@ -82,8 +84,8 @@ def print_ending():
 
     st.write(
         """
-        Please follow this link to confirm your completion for Prolific: [INSERT PROLIFIC LINK HERE]
-        Should you have any inquiries, please contact us at smkuhl@cs.washington.edu or lq9@cs.washington.edu.
+        Please follow this link to confirm your completion for Prolific: https://app.prolific.com/submissions/complete?cc=C1KIPIVY
+        Should you have any inquiries, please contact us at smkuhl@cs.washington.edu.
         We would like to thank you again for the participation! :)
         """
     )
@@ -136,7 +138,7 @@ def print_instruction():
                 """)
     st.write(
         """ 
-            You may the use internet to search any topics, people, organizations, etc. However we encourage you to not spend to much time on questions you do not know the answer to. This survey is designed to take about 20-30 minutes to complete. Please refrain from looking up the tweet directly or using any AI agent such as ChatGPT, Bard, or Bing Chat.
+            You should use the internet to search any topics, people, organizations, etc. Some questions will require you to do a quick search.
       """
     )
 
@@ -148,8 +150,8 @@ def print_instruction():
 
     # st.write(" ")
 
-    st.subheader("Video Demo")
-    st.write("View the following video for a demo on how to annotate one Tweet.")
+    # st.subheader("Video Demo")
+    # st.write("View the following video for a demo on how to annotate one Tweet.")
 
 
     st.caption("Note:")
