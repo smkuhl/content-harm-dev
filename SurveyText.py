@@ -40,7 +40,7 @@ def print_intro():
 
         For each Tweet, you will annotate their potential harms from five different perspectives: actionability, exploitativeness, likelihood of spread, believability, and social fragmentation.
 
-        You should use the internet to search any topics, people, organizations, etc. However we encourage you to not spend to much time on questions you do not know the answer to. Please refrain from looking up the tweet directly or using any AI agent such as ChatGPT, Bard, Bing Chat, Gemini, or Microsoft Copilot. 
+        You should use the internet to search any topics, people, organizations, etc. Please refrain from looking up the tweet directly or using any AI agent such as ChatGPT, Bard, Bing Chat, Gemini, or Microsoft Copilot. 
       
         """
     )
@@ -50,8 +50,7 @@ def print_intro():
     st.write(" ")
     st.write(
         """
-        
-        This annotation survey will take around 30 minutes. After submitting the survey, click on the link provided to be redirected. This will provide proof of completion.
+        After submitting the survey, click on the link provided to be redirected. This will provide proof of completion.
         
         We would like to express our gratitude for your time and contribution to our research. If you have any questions, please feel free to contact us at smkuhl@cs.washington.edu.
         
